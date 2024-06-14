@@ -2,33 +2,71 @@
 
 // Function to add a new task
 function addTask() {
-    // Get the task input
     const taskInput = document.getElementById('taskInput');
-    const taskValue = taskInput.value.trim();
+    const dueDateInput = document.getElementById('dueDate');
+    const priorityInput = document.getElementById('priority');
 
-    // Check if input is not empty
-    if (taskValue === '') {
-        alert('Please enter a task.');
+    const taskValue = taskInput.value.trim();
+    const dueDateValue = dueDateInput.value;
+    const priorityValue = priorityInput.value;
+
+    if (taskValue === '' || dueDateValue === '') {
+        alert('Please enter both a task and a due date.');
         return;
     }
 
-    // Create a new list item
+    // Check if the due date is in the past
+    if (new Date(dueDateValue) < new Date().setHours(0, 0, 0, 0)) {
+        alert('Due date cannot be in the past.');
+        return;
+    }
+
     const li = document.createElement('li');
-    li.textContent = taskValue;
+    li.className = priorityValue;
+
+    // Create a span to hold the task details
+    const taskDetails = document.createElement('span');
+    taskDetails.textContent = `${taskValue} - Due: ${dueDateValue}`;
+    li.appendChild(taskDetails);
+
+    // Create an edit button
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.className = 'edit';
+    editButton.onclick = function() {
+        editTask(this);
+    };
+    li.appendChild(editButton);
 
     // Create a delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
+    deleteButton.className = 'delete';
     deleteButton.onclick = function() {
         this.parentElement.remove();
     };
-
-    // Append the delete button to the list item
     li.appendChild(deleteButton);
 
-    // Append the list item to the task list
     document.getElementById('taskList').appendChild(li);
-
-    // Clear the input field
     taskInput.value = '';
+    dueDateInput.value = '';
+    priorityInput.value = 'low';
+}
+
+// Function to edit a task
+function editTask(button) {
+    const li = button.parentElement;
+    const taskDetails = li.querySelector('span').textContent.split(' - Due: ');
+    const task = taskDetails[0];
+    const dueDate = taskDetails[1];
+
+    const taskInput = document.getElementById('taskInput');
+    const dueDateInput = document.getElementById('dueDate');
+    const priorityInput = document.getElementById('priority');
+
+    taskInput.value = task;
+    dueDateInput.value = dueDate;
+    priorityInput.value = li.className;
+
+    li.remove();
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>Enhanced To-Do List</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
             background-color: #f4f4f4;
         }
         .container {
-            width: 300px;
+            width: 350px;
             background: white;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -26,10 +26,10 @@
             font-size: 24px;
             margin-bottom: 20px;
         }
-        input {
-            width: calc(100% - 44px);
+        input, select {
+            width: calc(100% - 24px);
             padding: 10px;
-            margin-right: 10px;
+            margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
@@ -40,7 +40,7 @@
             color: white;
             border-radius: 40px;
             cursor: pointer;
-            margin-top:10px;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #218838;
@@ -56,6 +56,15 @@
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
+        li.high {
+            background-color: #f8d7da;
+        }
+        li.medium {
+            background-color: #fff3cd;
+        }
+        li.low {
+            background-color: #d4edda;
+        }
         li button {
             background-color: #dc3545;
             padding: 5px;
@@ -64,15 +73,28 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        li button:hover {
+        li button.edit {
+            background-color: #007bff;
+            margin-right: 5px;
+        }
+        li button.edit:hover {
+            background-color: #0056b3;
+        }
+        li button.delete:hover {
             background-color: #c82333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>To-Do List</h1>
+        <h1>Enhanced To-Do List</h1>
         <input type="text" id="taskInput" placeholder="Enter a new task">
+        <input type="date" id="dueDate">
+        <select id="priority">
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+        </select>
         <button onclick="addTask()">Add</button>
         <ul id="taskList"></ul>
     </div>
