@@ -1,4 +1,7 @@
-// script.js
+// Load tasks from local storage when the page loads
+window.onload = function() {
+    loadTasks();
+};
 
 // Function to add a new task
 function addTask() {
@@ -43,11 +46,12 @@ function addTask() {
     deleteButton.textContent = 'Delete';
     deleteButton.className = 'delete';
     deleteButton.onclick = function() {
-        this.parentElement.remove();
+        deleteTask(this);
     };
     li.appendChild(deleteButton);
 
     document.getElementById('taskList').appendChild(li);
+    saveTasks();
     taskInput.value = '';
     dueDateInput.value = '';
     priorityInput.value = 'low';
@@ -69,4 +73,60 @@ function editTask(button) {
     priorityInput.value = li.className;
 
     li.remove();
+    saveTasks();
+}
+
+// Function to delete a task
+function deleteTask(button) {
+    button.parentElement.remove();
+    saveTasks();
+}
+
+// Function to save tasks to local storage
+function saveTasks() {
+    const taskList = document.getElementById('taskList');
+    const tasks = [];
+
+    taskList.querySelectorAll('li').forEach(li => {
+        const taskDetails = li.querySelector('span').textContent.split(' - Due: ');
+        tasks.push({
+            task: taskDetails[0],
+            dueDate: taskDetails[1],
+            priority: li.className
+        });
+    });
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Function to load tasks from local storage
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = task.priority;
+
+        const taskDetails = document.createElement('span');
+        taskDetails.textContent = `${task.task} - Due: ${task.dueDate}`;
+        li.appendChild(taskDetails);
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit';
+        editButton.onclick = function() {
+            editTask(this);
+        };
+        li.appendChild(editButton);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete';
+        deleteButton.onclick = function() {
+            deleteTask(this);
+        };
+        li.appendChild(deleteButton);
+
+        document.getElementById('taskList').appendChild(li);
+    });
 }
